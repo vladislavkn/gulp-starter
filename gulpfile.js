@@ -3,6 +3,7 @@ import scss from "gulp-scss";
 import concat from "gulp-concat";
 import browserSyncPlugin from "browser-sync";
 import uglifyPlugin from "gulp-uglify-es";
+import autoprefixer from "gulp=autoprefixer";
 
 import path from "./path-config.js";
 
@@ -17,6 +18,11 @@ export const serve = () =>
 export const styles = () =>
   src(path.src.styles)
     .pipe(scss({ outputStyle: "compressed" }))
+    .pipe(
+      autoprefixer({
+        overrideBrowserslist: ["last 10 version"],
+      })
+    )
     .pipe(concat(path.dest.stylesFileName))
     .pipe(dest(path.dest.styles))
     .pipe(browserSync.stream());
