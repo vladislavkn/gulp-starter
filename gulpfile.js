@@ -7,7 +7,7 @@ import uglifyPlugin from "gulp-uglify-es";
 import path from "./path-config.js";
 
 const browserSync = browserSyncPlugin.create();
-const uglify = uglifyPlugin.default();
+const uglify = uglifyPlugin.default;
 
 export const serve = () =>
   browserSync.init({
