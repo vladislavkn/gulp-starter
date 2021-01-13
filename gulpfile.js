@@ -7,6 +7,7 @@ import autoprefixer from "gulp-autoprefixer";
 import imagemin from "gulp-imagemin";
 import htmlmin from "gulp-htmlmin";
 import babel from "gulp-babel";
+import sourcemaps from "gulp-sourcemaps";
 import del from "del";
 
 import path from "./path-config.js";
@@ -24,6 +25,7 @@ const clean = () => del(path.dest.folder);
 
 const styles = () =>
   src(path.src.styles)
+    .pipe(sourcemaps.init())
     .pipe(scss({ outputStyle: "compressed" }))
     .pipe(
       autoprefixer({
@@ -31,10 +33,12 @@ const styles = () =>
       })
     )
     .pipe(concat(path.dest.stylesFileName))
+    .pipe(sourcemaps.write("."))
     .pipe(dest(path.dest.styles));
 
 const scripts = () =>
   src(path.src.scripts)
+    .pipe(sourcemaps.init())
     .pipe(
       babel({
         presets: ["@babel/env"],
@@ -42,6 +46,7 @@ const scripts = () =>
     )
     .pipe(uglify())
     .pipe(concat(path.dest.scriptsFileName))
+    .pipe(sourcemaps.write("."))
     .pipe(dest(path.dest.scripts));
 
 const html = () =>
