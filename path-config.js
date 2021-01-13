@@ -26,5 +26,3 @@ export default {
   stylesPlaceholder: "<!--@styles-->",
   scriptsPlaceholder: "<!--@scripts-->",
 };
-
-// TODO: fonts paths, img paths
