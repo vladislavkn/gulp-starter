@@ -5,6 +5,7 @@ import browserSyncPlugin from "browser-sync";
 import uglifyPlugin from "gulp-uglify-es";
 import autoprefixer from "gulp-autoprefixer";
 import imagemin from "gulp-imagemin";
+import htmlmin from "gulp-htmlmin";
 import del from "del";
 
 import path from "./path-config.js";
@@ -37,7 +38,16 @@ const scripts = () =>
     .pipe(concat(path.dest.scriptsFileName))
     .pipe(dest(path.dest.scripts));
 
-const html = () => src(path.src.html).pipe(dest(path.dest.html));
+const html = () =>
+  src(path.src.html)
+    .pipe(
+      htmlmin({
+        collapseBooleanAttributes: true,
+        collapseInlineTagWhitespace: true,
+        sortAttributes: true,
+      })
+    )
+    .pipe(dest(path.dest.html));
 
 const fonts = () => src(path.src.fonts).pipe(dest(path.dest.fonts));
 
