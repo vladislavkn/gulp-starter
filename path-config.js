@@ -1,5 +1,7 @@
 const srcFolder = "src";
 const distFolder = "dist";
+const scriptsFileName = "script.min.js";
+const stylesFileName = "style.min.css";
 
 export default {
   src: {
@@ -10,15 +12,19 @@ export default {
     images: `${srcFolder}/img/**/*`,
   },
   dest: {
-    folder: `${distFolder}/`,
+    stylesFileName,
+    scriptsFileName,
+    folder: distFolder,
+    stylesRelative: `./assets/styles/${stylesFileName}`,
+    scriptsRelative: `./assets/styles/${scriptsFileName}`,
     styles: `${distFolder}/assets/styles`,
-    stylesFileName: "style.min.css",
     scripts: `${distFolder}/assets/scripts`,
-    scriptsFileName: "script.min.js",
     fonts: `${distFolder}/assets/fonts`,
     images: `${distFolder}/assets/img`,
     html: `${distFolder}`,
   },
+  stylesPlaceholder: "<!--@styles-->",
+  scriptsPlaceholder: "<!--@scripts-->",
 };
 
 // TODO: fonts paths, img paths

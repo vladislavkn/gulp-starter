@@ -8,6 +8,7 @@ import imagemin from "gulp-imagemin";
 import htmlmin from "gulp-htmlmin";
 import babel from "gulp-babel";
 import sourcemaps from "gulp-sourcemaps";
+import inject from "gulp-inject-string";
 import del from "del";
 
 import path from "./path-config.js";
@@ -51,6 +52,18 @@ const scripts = () =>
 
 const html = () =>
   src(path.src.html)
+    .pipe(
+      inject.replace(
+        path.stylesPlaceholder,
+        `<link rel="stylesheet" href="${path.dest.stylesRelative}" />`
+      )
+    )
+    .pipe(
+      inject.replace(
+        path.scriptsPlaceholder,
+        `<script src="${path.dest.scriptsRelative}"></script>`
+      )
+    )
     .pipe(
       htmlmin({
         collapseBooleanAttributes: true,
