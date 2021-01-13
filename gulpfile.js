@@ -1,12 +1,15 @@
-import { src, dest, watch, parallel } from "gulp";
-import scss from "gulp-scss";
+import gulp from "gulp";
+import scss from "gulp-sass";
 import concat from "gulp-concat";
 import browserSyncPlugin from "browser-sync";
 import uglifyPlugin from "gulp-uglify-es";
-import autoprefixer from "gulp=autoprefixer";
+import autoprefixer from "gulp-autoprefixer";
+import imagemin from "gulp-imagemin";
+import del from "del";
 
 import path from "./path-config.js";
 
+const { src, dest, watch, parallel, series } = gulp;
 const browserSync = browserSyncPlugin.create();
 const uglify = uglifyPlugin.default;
 
@@ -14,6 +17,8 @@ export const serve = () =>
   browserSync.init({
     server: { baseDir: path.dest.folder },
   });
+
+export const clean = () => del(path.dest.folder);
 
 export const styles = () =>
   src(path.src.styles)
@@ -24,20 +29,34 @@ export const styles = () =>
       })
     )
     .pipe(concat(path.dest.stylesFileName))
-    .pipe(dest(path.dest.styles))
-    .pipe(browserSync.stream());
+    .pipe(dest(path.dest.styles));
 
 export const scripts = () =>
   src(path.src.scripts)
     .pipe(uglify())
     .pipe(concat(path.dest.scriptsFileName))
-    .pipe(dest(path.dest.scripts))
-    .pipe(browserSync.stream());
+    .pipe(dest(path.dest.scripts));
+
+export const html = () => src(path.src.html).pipe(dest(path.dest.html));
+
+export const fonts = () => src(path.src.fonts).pipe(dest(path.dest.fonts));
+
+export const images = () =>
+  src(path.src.images).pipe(imagemin()).pipe(dest(path.dest.images));
+
+export const build = series(
+  clean,
+  parallel(scripts, styles, html, images, fonts)
+);
 
 export const watchFiles = () => {
-  watch([path.src.styles], styles);
-  watch([path.src.html]).on("change", browserSync.reload);
-  watch([path.src.scripts], scripts);
+  watch([path.src.styles], styles).on("change", browserSync.reload);
+  watch([path.src.html], html).on("change", browserSync.reload);
+  watch([path.src.scripts], scripts).on("change", browserSync.reload);
+  watch([path.src.images], images).on("change", browserSync.reload);
+  watch([path.src.fonts], fonts).on("change", browserSync.reload);
 };
 
-export default parallel(serve, watchFiles);
+export default series(build, parallel(serve, watchFiles));
+
+// TODO: img task, del task, build task
