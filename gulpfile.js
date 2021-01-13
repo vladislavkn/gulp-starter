@@ -6,6 +6,7 @@ import uglifyPlugin from "gulp-uglify-es";
 import autoprefixer from "gulp-autoprefixer";
 import imagemin from "gulp-imagemin";
 import htmlmin from "gulp-htmlmin";
+import babel from "gulp-babel";
 import del from "del";
 
 import path from "./path-config.js";
@@ -34,6 +35,11 @@ const styles = () =>
 
 const scripts = () =>
   src(path.src.scripts)
+    .pipe(
+      babel({
+        presets: ["@babel/env"],
+      })
+    )
     .pipe(uglify())
     .pipe(concat(path.dest.scriptsFileName))
     .pipe(dest(path.dest.scripts));
@@ -68,5 +74,3 @@ export const build = series(
 );
 
 export default series(build, parallel(serve, watchFiles));
-
-// TODO: img task, del task, build task
